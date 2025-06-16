@@ -49,6 +49,12 @@ def init_db():
         answer TEXT,
         timestamp TEXT
     )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS feedback (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    message TEXT,
+    timestamp TEXT
+)''')
+
 
     conn.commit()
     conn.close()
@@ -81,11 +87,10 @@ def whatsapp():
                       (feedback_msg, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
             conn.commit()
             conn.close()
-            msg.body("✅ Feedback received! Thank you for helping us improve.")
+            msg.body("🙏 Thanks for your feedback! We appreciate it.")
         else:
-            msg.body("⚠️ Please type your message after the word 'feedback'")
+            msg.body("✏️ Please type your feedback like this:\nfeedback I love this bot!")
 
-    # SALE Command: "sale 2 soap @50"
     elif incoming_msg.startswith("sale"):
         try:
             parts = incoming_msg.split()
@@ -112,10 +117,9 @@ def whatsapp():
             conn.commit()
             conn.close()
             msg.body(f"✅ Sale recorded:\n{quantity} {item} @ {unit_price} = KES {total}\n{alert}")
-        except Exception as e:
+        except:
             msg.body("❌ Format error. Try: sale 2 soap @50")
 
-    # STOCK Command: "stock soap"
     elif incoming_msg.startswith("stock"):
         try:
             item = incoming_msg.split()[1]
@@ -131,7 +135,6 @@ def whatsapp():
         except:
             msg.body("⚠️ Format: stock <item>")
 
-    # REMINDER Command: "remind Tonny 200 rent"
     elif incoming_msg.startswith("remind"):
         try:
             _, name, amount, reason = incoming_msg.split(maxsplit=3)
@@ -149,7 +152,6 @@ def whatsapp():
         except:
             msg.body("⚠️ Format: remind <name> <amount> <reason>")
 
-    # SUMMARY Command
     elif 'summary' in incoming_msg:
         today = date.today().strftime("%Y-%m-%d")
         conn = sqlite3.connect('sales.db')
@@ -160,17 +162,32 @@ def whatsapp():
         conn.close()
         msg.body(f"📊 Total earned today ({today}): KES {total_today}")
 
-    # GREETING
-    elif 'hello' in incoming_msg:
-        msg.body("👋 Hello! I'm BiasharaBot. Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary\n• feedback Your message")
+    elif any(greet in incoming_msg for greet in ['hello', 'hi', 'hey', 'start']):
+        msg.body(
+            "👋 Hey there! I'm *BiasharaBot*, your sales assistant.\n\n"
+            "You can try these commands:\n"
+            "• 🛒 `sale 2 soap @50`\n"
+            "• 📦 `stock soap`\n"
+            "• 🔔 `remind John 300 rent`\n"
+            "• 📊 `summary`\n"
+            "• 📝 `feedback I love this bot!`\n\n"
+            "Just type your request and I’ll take care of it!"
+        )
 
-    # SMART REPLY
     else:
         response = smart_reply(incoming_msg)
         if response:
             msg.body(response)
         else:
-            msg.body("🤖 Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary\n• feedback Your message")
+            msg.body(
+                "🤖 Hmm, I didn’t quite get that. You can try:\n\n"
+                "• 🛒 Record a sale: `sale 2 soap @50`\n"
+                "• 📦 Check stock: `stock soap`\n"
+                "• 🔔 Set a reminder: `remind John 300 rent`\n"
+                "• 📊 Daily summary: `summary`\n"
+                "• 📝 Feedback: `feedback your message`\n\n"
+                "Type *hello* to see all commands again."
+            )
 
     return str(resp)
 
