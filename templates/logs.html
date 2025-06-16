@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bot Logs</title>
+</head>
+<body>
+    <h2>Conversation Logs</h2>
+    <table border="1">
+        <tr><th>Time</th><th>Question</th><th>Answer</th></tr>
+        {% for q, a, t in logs %}
+        <tr><td>{{ t }}</td><td>{{ q }}</td><td>{{ a }}</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
