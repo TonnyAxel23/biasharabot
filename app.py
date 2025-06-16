@@ -21,6 +21,14 @@ def smart_reply(msg):
             return intent["response"]
     return None
 
+def log_conversation(question, answer):
+    conn = sqlite3.connect('sales.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO logs (question, answer, timestamp) VALUES (?, ?, ?)",
+              (question, answer, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    conn.commit()
+    conn.close()
+
 # ===========================
 # 🗃️ Initialize Database
 # ===========================
@@ -35,6 +43,13 @@ def init_db():
         name TEXT, amount REAL, reason TEXT, date TEXT)''')
     c.execute('''CREATE TABLE IF NOT EXISTS stock (
         item TEXT PRIMARY KEY, quantity INTEGER)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question TEXT,
+        answer TEXT,
+        timestamp TEXT
+    )''')
+
     conn.commit()
     conn.close()
 
