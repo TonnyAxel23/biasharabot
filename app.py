@@ -39,6 +39,7 @@ def index():
 # ===========================
 # 🤖 WhatsApp Bot Endpoint
 # ===========================
+@app.route('/incoming', methods=['POST'])
 @app.route('/whatsapp', methods=['POST'])
 def whatsapp():
     incoming_msg = request.values.get('Body', '').lower()
