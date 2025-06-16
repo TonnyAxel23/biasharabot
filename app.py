@@ -3,8 +3,23 @@ from twilio.twiml.messaging_response import MessagingResponse
 import sqlite3
 import os
 from datetime import datetime, date
+import json
+from difflib import get_close_matches
 
 app = Flask(__name__)
+
+# ===========================
+# 🤖 Load Intents for Smart Replies
+# ===========================
+with open("intents.json") as file:
+    intents = json.load(file)
+
+def smart_reply(msg):
+    msg = msg.lower()
+    for intent in intents:
+        if any(get_close_matches(msg, intent["patterns"], cutoff=0.6)):
+            return intent["response"]
+    return None
 
 # ===========================
 # 🗃️ Initialize Database
@@ -12,18 +27,14 @@ app = Flask(__name__)
 def init_db():
     conn = sqlite3.connect('sales.db')
     c = conn.cursor()
-
     c.execute('''CREATE TABLE IF NOT EXISTS sales (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         item TEXT, quantity INTEGER, unit_price REAL, total REAL, date TEXT)''')
-
     c.execute('''CREATE TABLE IF NOT EXISTS reminders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT, amount REAL, reason TEXT, date TEXT)''')
-
     c.execute('''CREATE TABLE IF NOT EXISTS stock (
         item TEXT PRIMARY KEY, quantity INTEGER)''')
-
     conn.commit()
     conn.close()
 
@@ -49,7 +60,6 @@ def whatsapp():
     # SALE Command: "sale 2 soap @50"
     if incoming_msg.startswith("sale"):
         try:
-            # Extract info: "sale 2 soap @50"
             parts = incoming_msg.split()
             quantity = int(parts[1])
             item = parts[2]
@@ -126,12 +136,15 @@ def whatsapp():
     elif 'hello' in incoming_msg:
         msg.body("👋 Hello! I'm BiasharaBot. Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary")
 
-    # UNKNOWN COMMAND
+    # SMART REPLY
     else:
-        msg.body("🤖 Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary")
+        response = smart_reply(incoming_msg)
+        if response:
+            msg.body(response)
+        else:
+            msg.body("🤖 Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary")
 
     return str(resp)
-
 
 # ===========================
 # ➕ Add Sale Page
