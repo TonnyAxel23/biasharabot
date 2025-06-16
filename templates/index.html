@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record Sale | BiasharaBot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f2f7fb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 420px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        form label {
+            display: block;
+            margin: 0.5rem 0 0.2rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        form input[type="text"],
+        form input[type="number"] {
+            width: calc(100% - 3rem);
+            padding: 0.6rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group button {
+            margin-left: 0.5rem;
+            background: #eee;
+            border: none;
+            border-radius: 50%;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .input-group button:hover {
+            background: #dce8ff;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056cc;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                margin: 1rem;
+            }
+        }
+    </style>
+
+    <script>
+        function startDictation(id) {
+            const input = document.getElementById(id);
+            const recognition = new webkitSpeechRecognition(); // Use SpeechRecognition for Firefox
+            recognition.lang = "en-US";
+            recognition.onresult = function (event) {
+                input.value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        }
+
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-US';
+            synth.speak(utter);
+        }
+    </script>
+</head>
+<body onload="speak('Welcome back! Your sales summary is ready.')">
+    <div class="container">
+        <h2>🛒 Record a Sale</h2>
+        <form action="/add_sale" method="POST">
+            <label for="item">Item</label>
+            <div class="input-group">
+                <input type="text" id="item" name="item" required>
+                <button type="button" onclick="startDictation('item')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <label for="quantity">Quantity</label>
+            <div class="input-group">
+                <input type="number" id="quantity" name="quantity" required>
+                <button type="button" onclick="startDictation('quantity')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <label for="unit_price">Unit Price (KES)</label>
+            <div class="input-group">
+                <input type="number" id="unit_price" name="unit_price" step="0.01" required>
+                <button type="button" onclick="startDictation('unit_price')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <button type="submit">✅ Save Sale</button>
+        </form>
+    </div>
+</body>
+</html>

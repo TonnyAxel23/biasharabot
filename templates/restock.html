@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BiasharaBot - Restock Items</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 3rem);
+            padding: 0.6rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group button {
+            margin-left: 0.5rem;
+            background: #eee;
+            border: none;
+            border-radius: 50%;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .input-group button:hover {
+            background: #d0e0ff;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        function startDictation(id) {
+            const input = document.getElementById(id);
+            const recognition = new webkitSpeechRecognition(); // Or use SpeechRecognition
+            recognition.lang = "en-US";
+            recognition.onresult = function (event) {
+                input.value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        }
+
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-US';
+            synth.speak(utter);
+        }
+    </script>
+</head>
+<body onload="speak('Welcome back! Ready to restock your inventory?')">
+    <div class="container">
+        <h2>📦 Restock Inventory</h2>
+        <form method="POST">
+            <label for="item">Item Name</label>
+            <div class="input-group">
+                <input type="text" id="item" name="item" required>
+                <button type="button" onclick="startDictation('item')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <label for="quantity">Quantity to Add</label>
+            <div class="input-group">
+                <input type="number" id="quantity" name="quantity" required>
+                <button type="button" onclick="startDictation('quantity')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <button type="submit">🔄 Restock</button>
+        </form>
+
+        <a href="/">← Back to Home</a>
+    </div>
+</body>
+</html>

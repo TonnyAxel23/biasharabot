@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BiasharaBot | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: #f4f7fa;
+            padding: 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #222;
+        }
+
+        .dashboard {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        ul li {
+            padding: 0.4rem 0;
+            color: #c0392b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .no-data {
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            table, tr, td, th {
+                display: block;
+                width: 100%;
+            }
+
+            td, th {
+                padding: 0.5rem;
+            }
+
+            th {
+                background-color: #007bff;
+                border-radius: 6px 6px 0 0;
+            }
+        }
+    </style>
+
+    <script>
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-US';
+            synth.speak(utter);
+        }
+    </script>
+</head>
+<body onload="speak('Welcome back! Your sales summary is ready.')">
+
+    <div class="dashboard">
+        <h2>📊 BiasharaBot Dashboard</h2>
+
+        <div class="card">
+            <h3>💰 Total Earned Today</h3>
+            <p>KES {{ total_today }}</p>
+        </div>
+
+        <div class="card">
+            <h3>⚠️ Low Stock Items</h3>
+            {% if low_stock %}
+                <ul>
+                {% for item, qty in low_stock %}
+                    <li><strong>{{ item }}</strong> — only {{ qty }} left</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-data">✅ All stock levels are sufficient</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h3>📝 Outstanding Reminders</h3>
+            {% if reminders %}
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount (KES)</th>
+                        <th>Reason</th>
+                    </tr>
+                    {% for name, amount, reason in reminders %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>KES {{ amount }}</td>
+                        <td>{{ reason }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="no-data">👍 No pending payments</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h3>📦 Recent Sales</h3>
+            {% if recent_sales %}
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                    </tr>
+                    {% for item, qty, price, total, date in recent_sales %}
+                    <tr>
+                        <td>{{ item }}</td>
+                        <td>{{ qty }}</td>
+                        <td>KES {{ price }}</td>
+                        <td>KES {{ total }}</td>
+                        <td>{{ date }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="no-data">No sales yet today.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

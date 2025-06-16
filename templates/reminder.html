@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BiasharaBot - Payment Reminder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f8fb;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 420px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 3rem);
+            padding: 0.6rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group button {
+            margin-left: 0.5rem;
+            background: #eee;
+            border: none;
+            border-radius: 50%;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .input-group button:hover {
+            background: #dce8ff;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        a {
+            display: block;
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        function startDictation(id) {
+            const input = document.getElementById(id);
+            const recognition = new webkitSpeechRecognition(); // Use SpeechRecognition for Firefox
+            recognition.lang = "en-US";
+            recognition.onresult = function (event) {
+                input.value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        }
+
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-US';
+            synth.speak(utter);
+        }
+    </script>
+</head>
+<body onload="speak('Welcome back! Ready to set a reminder?')">
+    <div class="container">
+        <h2>💰 Add Payment Reminder</h2>
+        <form method="POST">
+            <label for="name">Customer Name</label>
+            <div class="input-group">
+                <input type="text" id="name" name="name" required>
+                <button type="button" onclick="startDictation('name')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <label for="amount">Amount (KES)</label>
+            <div class="input-group">
+                <input type="number" step="0.01" id="amount" name="amount" required>
+                <button type="button" onclick="startDictation('amount')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <label for="reason">Reason</label>
+            <div class="input-group">
+                <input type="text" id="reason" name="reason" placeholder="e.g. Milk, Airtime" required>
+                <button type="button" onclick="startDictation('reason')"><i class="fas fa-microphone"></i></button>
+            </div>
+
+            <button type="submit">💾 Save Reminder</button>
+        </form>
+
+        <a href="/">← Back to Home</a>
+    </div>
+</body>
+</html>
