@@ -1,0 +1,107 @@
+[
+  {
+    "tag": "greeting",
+    "patterns": ["hi", "hello", "hey", "good morning", "good evening"],
+    "response": "Hello! I'm BiasharaBot 🤖. How can I help you today?"
+  },
+  {
+    "tag": "goodbye",
+    "patterns": ["bye", "goodbye", "see you", "catch you later"],
+    "response": "Goodbye! Have a great day 😊"
+  },
+  {
+    "tag": "thanks",
+    "patterns": ["thank you", "thanks", "asante", "thx", "appreciate it"],
+    "response": "You're welcome! Let me know if there's anything else I can help with."
+  },
+  {
+    "tag": "hours",
+    "patterns": ["what are your working hours", "when are you open", "business hours", "what time do you open"],
+    "response": "We are open Monday to Saturday from 8am to 6pm."
+  },
+  {
+    "tag": "location",
+    "patterns": ["where are you located", "your location", "shop address", "where is your shop"],
+    "response": "We’re located in Nairobi CBD, next to Kencom stage."
+  },
+  {
+    "tag": "price_soap",
+    "patterns": ["how much is soap", "price of soap", "soap cost", "soap price"],
+    "response": "A bar of soap goes for KES 50."
+  },
+  {
+    "tag": "price_oil",
+    "patterns": ["how much is cooking oil", "price of oil", "oil cost", "cost of cooking oil"],
+    "response": "Cooking oil is KES 350 for 1 litre."
+  },
+  {
+    "tag": "price_rice",
+    "patterns": ["how much is rice", "price of rice", "cost of rice"],
+    "response": "Rice is KES 160 per kilogram."
+  },
+  {
+    "tag": "delivery_time",
+    "patterns": ["how long does delivery take", "when will I get my order", "delivery time"],
+    "response": "Delivery takes 1-2 hours within Nairobi."
+  },
+  {
+    "tag": "delivery_fee",
+    "patterns": ["how much is delivery", "delivery charges", "cost of delivery"],
+    "response": "Delivery fee is KES 100 within Nairobi."
+  },
+  {
+    "tag": "place_order",
+    "patterns": ["how can I order", "place an order", "make an order", "order now"],
+    "response": "Just type what you want like: order 2 soaps and 1kg rice."
+  },
+  {
+    "tag": "payment_methods",
+    "patterns": ["how do I pay", "payment options", "modes of payment", "do you accept M-Pesa"],
+    "response": "We accept M-Pesa, cash on delivery, and bank transfer."
+  },
+  {
+    "tag": "mpesa_paybill",
+    "patterns": ["mpesa paybill", "what's your paybill", "paybill number"],
+    "response": "Our M-Pesa Paybill number is 123456. Use your name as the account."
+  },
+  {
+    "tag": "bulk_discount",
+    "patterns": ["do you offer discounts", "bulk discount", "if I buy many will I get discount"],
+    "response": "Yes! We offer discounts on bulk orders. Please specify the items and quantities."
+  },
+  {
+    "tag": "product_availability",
+    "patterns": ["do you have sugar", "do you have tissue paper", "is cooking oil available"],
+    "response": "Yes, we currently have all major household items in stock."
+  },
+  {
+    "tag": "return_policy",
+    "patterns": ["what is your return policy", "can I return an item", "refund policy"],
+    "response": "We accept returns within 48 hours if the item is damaged or incorrect."
+  },
+  {
+    "tag": "track_order",
+    "patterns": ["how can I track my order", "track delivery", "order status"],
+    "response": "Once your order is confirmed, we’ll send you a tracking link via WhatsApp."
+  },
+  {
+    "tag": "support_contact",
+    "patterns": ["how do I talk to someone", "I want to talk to a human", "customer support"],
+    "response": "You can reach our human agent at 0792 000 000 or reply with 'talk to agent'."
+  },
+  {
+    "tag": "new_products",
+    "patterns": ["what's new", "any new stock", "new arrivals", "latest products"],
+    "response": "We’ve just restocked cooking oil, diapers, and baby formula. Would you like prices?"
+  },
+  {
+    "tag": "complaint",
+    "patterns": ["I have a complaint", "not satisfied", "bad service", "issue with my order"],
+    "response": "Sorry to hear that! Please share the issue and we’ll resolve it immediately."
+  },
+  {
+    "tag": "business_inquiry",
+    "patterns": ["do you supply to businesses", "bulk supplies", "B2B sales", "wholesale prices"],
+    "response": "Yes, we offer business supplies. Kindly reach out via 0792 000 000 for quotes."
+  }
+]
