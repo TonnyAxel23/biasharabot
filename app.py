@@ -42,11 +42,77 @@ def index():
 @app.route('/incoming', methods=['POST'])
 @app.route('/whatsapp', methods=['POST'])
 def whatsapp():
-    incoming_msg = request.values.get('Body', '').lower()
+    incoming_msg = request.values.get('Body', '').strip().lower()
     resp = MessagingResponse()
     msg = resp.message()
 
-    if 'summary' in incoming_msg:
+    # SALE Command: "sale 2 soap @50"
+    if incoming_msg.startswith("sale"):
+        try:
+            # Extract info: "sale 2 soap @50"
+            parts = incoming_msg.split()
+            quantity = int(parts[1])
+            item = parts[2]
+            unit_price = float(parts[3].replace("@", ""))
+            total = quantity * unit_price
+            date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            conn = sqlite3.connect('sales.db')
+            c = conn.cursor()
+            c.execute("INSERT INTO sales (item, quantity, unit_price, total, date) VALUES (?, ?, ?, ?, ?)",
+                      (item, quantity, unit_price, total, date_str))
+
+            # Update stock
+            c.execute("SELECT quantity FROM stock WHERE item = ?", (item,))
+            result = c.fetchone()
+            alert = ""
+            if result:
+                new_qty = result[0] - quantity
+                c.execute("UPDATE stock SET quantity = ? WHERE item = ?", (new_qty, item))
+                if new_qty <= 5:
+                    alert = f"⚠️ LOW STOCK ALERT: {item} has only {new_qty} left!"
+            conn.commit()
+            conn.close()
+            msg.body(f"✅ Sale recorded:\n{quantity} {item} @ {unit_price} = KES {total}\n{alert}")
+        except Exception as e:
+            msg.body("❌ Format error. Try: sale 2 soap @50")
+
+    # STOCK Command: "stock soap"
+    elif incoming_msg.startswith("stock"):
+        try:
+            item = incoming_msg.split()[1]
+            conn = sqlite3.connect('sales.db')
+            c = conn.cursor()
+            c.execute("SELECT quantity FROM stock WHERE item = ?", (item,))
+            result = c.fetchone()
+            if result:
+                msg.body(f"📦 Stock for {item}: {result[0]}")
+            else:
+                msg.body(f"❌ Item '{item}' not found in stock.")
+            conn.close()
+        except:
+            msg.body("⚠️ Format: stock <item>")
+
+    # REMINDER Command: "remind Tonny 200 rent"
+    elif incoming_msg.startswith("remind"):
+        try:
+            _, name, amount, reason = incoming_msg.split(maxsplit=3)
+            amount = float(amount)
+            date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            conn = sqlite3.connect('sales.db')
+            c = conn.cursor()
+            c.execute("INSERT INTO reminders (name, amount, reason, date) VALUES (?, ?, ?, ?)",
+                      (name.title(), amount, reason, date_str))
+            conn.commit()
+            conn.close()
+
+            msg.body(f"📝 Reminder saved:\n{name.title()} owes KES {amount} for {reason}")
+        except:
+            msg.body("⚠️ Format: remind <name> <amount> <reason>")
+
+    # SUMMARY Command
+    elif 'summary' in incoming_msg:
         today = date.today().strftime("%Y-%m-%d")
         conn = sqlite3.connect('sales.db')
         c = conn.cursor()
@@ -56,13 +122,16 @@ def whatsapp():
         conn.close()
         msg.body(f"📊 Total earned today ({today}): KES {total_today}")
 
+    # GREETING
     elif 'hello' in incoming_msg:
-        msg.body("👋 Hello! I'm BiasharaBot. Type 'summary', 'sale 2 soap @50', or 'stock soap'.")
+        msg.body("👋 Hello! I'm BiasharaBot. Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary")
 
+    # UNKNOWN COMMAND
     else:
-        msg.body("❓ Sorry, I didn’t understand that. Try: summary, stock soap, or sale...")
+        msg.body("🤖 Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary")
 
     return str(resp)
+
 
 # ===========================
 # ➕ Add Sale Page
