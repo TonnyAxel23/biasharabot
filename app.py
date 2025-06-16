@@ -72,8 +72,21 @@ def whatsapp():
     resp = MessagingResponse()
     msg = resp.message()
 
+    if incoming_msg.startswith("feedback"):
+        feedback_msg = incoming_msg.replace("feedback", "").strip()
+        if feedback_msg:
+            conn = sqlite3.connect('sales.db')
+            c = conn.cursor()
+            c.execute("INSERT INTO feedback (message, timestamp) VALUES (?, ?)",
+                      (feedback_msg, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            conn.commit()
+            conn.close()
+            msg.body("✅ Feedback received! Thank you for helping us improve.")
+        else:
+            msg.body("⚠️ Please type your message after the word 'feedback'")
+
     # SALE Command: "sale 2 soap @50"
-    if incoming_msg.startswith("sale"):
+    elif incoming_msg.startswith("sale"):
         try:
             parts = incoming_msg.split()
             quantity = int(parts[1])
@@ -149,7 +162,7 @@ def whatsapp():
 
     # GREETING
     elif 'hello' in incoming_msg:
-        msg.body("👋 Hello! I'm BiasharaBot. Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary")
+        msg.body("👋 Hello! I'm BiasharaBot. Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary\n• feedback Your message")
 
     # SMART REPLY
     else:
@@ -157,7 +170,7 @@ def whatsapp():
         if response:
             msg.body(response)
         else:
-            msg.body("🤖 Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary")
+            msg.body("🤖 Try:\n• sale 2 soap @50\n• stock soap\n• remind John 300 rent\n• summary\n• feedback Your message")
 
     return str(resp)
 
