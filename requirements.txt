@@ -2,4 +2,3 @@ flask
 gunicorn
 requests
 twilio
-sqlite3
